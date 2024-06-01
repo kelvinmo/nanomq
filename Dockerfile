@@ -27,7 +27,7 @@ FROM alpine:${ALPINE_VERSION}
 
 COPY --from=builder /nanomq/build/nanomq/nanomq /usr/local/nanomq/
 COPY --from=builder /nanomq/build/nanomq_cli/nanomq_cli /usr/local/nanomq/
-COPY --from=builder /nanomq/etc/nanomq.conf /etc/nanomq.conf
+COPY ./nanomq.conf /etc/nanomq/nanomq.conf
 COPY --from=builder /nanomq/deploy/docker/docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
 
 WORKDIR /usr/local/nanomq
@@ -40,7 +40,9 @@ RUN set -x && \
 
 EXPOSE 1883 8883
 
+VOLUME /var/log/nanomq
+
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
 
-CMD ["--conf", "/etc/nanomq.conf"]
+CMD ["--conf", "/etc/nanomq/nanomq.conf"]
 
