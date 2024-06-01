@@ -27,7 +27,7 @@ FROM alpine:${ALPINE_VERSION}
 
 COPY --from=builder /nanomq/build/nanomq/nanomq /usr/local/nanomq/
 COPY --from=builder /nanomq/build/nanomq_cli/nanomq_cli /usr/local/nanomq/
-COPY --from=builder /nanomq/etc/nanomq.conf /etc/nanomq.conf
+COPY ./nanomq.conf /etc/nanomq/nanomq.conf
 COPY --from=builder /nanomq/deploy/docker/docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
 
 WORKDIR /usr/local/nanomq
@@ -36,11 +36,13 @@ RUN ln -s /usr/local/nanomq/nanomq /usr/bin/nanomq && \
     ln -s /usr/local/nanomq/nanomq_cli /usr/bin/nanomq_cli
 
 RUN set -x && \
-    apk --no-cache add mbedtls-dev libatomic
+    apk --no-cache add tini mbedtls-dev libatomic
 
 EXPOSE 1883 8883
 
-ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+VOLUME /var/log/nanomq
 
-CMD ["--conf", "/etc/nanomq.conf"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
+
+CMD ["--conf", "/etc/nanomq/nanomq.conf"]
 
