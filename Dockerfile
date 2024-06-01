@@ -36,13 +36,13 @@ RUN ln -s /usr/local/nanomq/nanomq /usr/bin/nanomq && \
     ln -s /usr/local/nanomq/nanomq_cli /usr/bin/nanomq_cli
 
 RUN set -x && \
-    apk --no-cache add mbedtls-dev libatomic
+    apk --no-cache add tini mbedtls-dev libatomic
 
 EXPOSE 1883 8883
 
 VOLUME /var/log/nanomq
 
-ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
 
 CMD ["--conf", "/etc/nanomq/nanomq.conf"]
 
