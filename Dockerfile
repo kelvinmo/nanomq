@@ -1,7 +1,7 @@
 # Define versions
 
 ARG ALPINE_VERSION=3.18
-ARG NANOMQ_VERSION=0.21.10
+ARG NANOMQ_VERSION=0.23.10
 
 # -------------------------------------------------------------------------------------------------------
 # Build nanomq from source
